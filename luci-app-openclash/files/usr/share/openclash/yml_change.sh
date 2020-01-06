@@ -99,6 +99,8 @@
           sed -i "/^dns:/i\secret: \"${4}\"" "$7"
        fi
     fi
+    
+    sed -i '/^ \{0,\}tun:/,/^ \{0,\}enable:/d' "$7" 2>/dev/null
 
     if [ -z "$(grep "^   enable: true" "$7")" ]; then
        if [ ! -z "$(grep "^ \{0,\}enable:" "$7")" ]; then
@@ -144,6 +146,11 @@
           fi
        fi
     fi
+    
+    if [ "$15" -eq 1 ]; then
+       sed -i "/^dns:/i\tun:" "$7"
+       sed -i "/^dns:/i\  enable: true" "$7"
+    fi
 
 #添加自定义Hosts设置
 	   
@@ -157,6 +164,6 @@
 	     fi
        sed -i '/^hosts:/a\##Custom HOSTS END##' "$7" 2>/dev/null
        sed -i '/^hosts:/a\##Custom HOSTS##' "$7" 2>/dev/null
-	     sed -i '/##Custom HOSTS##/r/etc/config/openclash_custom_hosts.list' "$7" 2>/dev/null
+	     sed -i '/##Custom HOSTS##/r/etc/openclash/custom/openclash_custom_hosts.list' "$7" 2>/dev/null
 	     sed -i "/^hosts:/,/^dns:/ {s/^ \{0,\}'/  '/}" "$7" 2>/dev/null #修改参数空格
 	  fi
